@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
 import axios from 'axios';
 import { orderBy } from 'lodash'
 
@@ -94,13 +93,13 @@ const Home = ({ token, ProductsSelector, SetProducts, SearchProduct }) => {
                 sellPrice: val.stocks[0].sellPrice.UZS + " UZS",
                 count: val.stocks[0].count
             })
+            return val
         })
-        orderBy(dataSource, ['name'], ['asc'])
+        dataSource = orderBy(dataSource, ['name'], ['asc']);
     }
-
     return (
         <>
-            <Table dataSource={dataSource} columns={columns}
+            <Table ProductsSelector={ProductsSelector} dataSource={dataSource} columns={columns}
                 pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30'] }} />
         </>
     )

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import axios from 'axios';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined, GlobalOutlined } from '@ant-design/icons';
 
 import { setCurrentUser } from '../../redux/auth/auth.action'
@@ -89,11 +89,6 @@ const SignIn = ({ SetCurrentUser }) => {
                             name="_subdomain"
                             value={_subdomain} onChange={handleChange}
                         />
-                    </Form.Item>
-                    <Form.Item>
-                        <Form.Item name="remember" valuePropName="checked" noStyle>
-                            <Checkbox>Remember me</Checkbox>
-                        </Form.Item>
                     </Form.Item>
 
                     <Form.Item>
