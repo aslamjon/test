@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-
+import { orderBy } from 'lodash'
 
 import Table from '../../components/Table';
 import { ProductsSelector, SearchProductSelector } from '../../redux/products/products.selector';
@@ -94,18 +94,12 @@ const Home = ({ token, ProductsSelector, SetProducts, SearchProduct }) => {
                 sellPrice: val.stocks[0].sellPrice.UZS + " UZS",
                 count: val.stocks[0].count
             })
-            dataSource.sort((a, b) => {
-                console.log(a, b)
-            })
         })
+        orderBy(dataSource, ['name'], ['asc'])
     }
-    // useEffect(() => {
-    //     console.log("ProductsSelector", ProductsSelector)
-    // })
 
     return (
         <>
-            {console.log('render')}
             <Table dataSource={dataSource} columns={columns}
                 pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30'] }} />
         </>
