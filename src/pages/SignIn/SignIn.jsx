@@ -10,10 +10,16 @@ import { setCurrentUser } from '../../redux/auth/auth.action'
 import { currentUser } from '../../redux/auth/auth.selector';
 import {
     BackgroundStyledInSignin,
-    CardStyledInSignIn
-} from './SignInStyle';
+    CardStyledInSignIn } from './SignInStyle';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignIn = ({ SetCurrentUser }) => {
+    const notify = () => {
+        toast.error("Error: Unauthorized !", {
+            position: toast.POSITION.TOP_RIGHT
+        });
+    }
     const [form, setForm] = useState({
         _username: '',
         _password: '',
@@ -31,12 +37,17 @@ const SignIn = ({ SetCurrentUser }) => {
             }
         }
         axios.post(url, params, config)
-            .then(res => res.data.token && SetCurrentUser({ ...form, token: res.data.token }));
+            .then(res => res.data.token && SetCurrentUser({ ...form, token: res.data.token }))
+            .catch(err => notify());
         event.preventDefault();
     }
     const { _username, _password, _subdomain } = form;
+    
+        
     return (
+
         <BackgroundStyledInSignin>
+            <ToastContainer />
             <CardStyledInSignIn>
                 <Form
                     name="normal_login"
