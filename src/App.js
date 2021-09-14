@@ -18,6 +18,7 @@ class App extends Component {
             <Route exact path='/' render={() => currentUser.token ? <Home token={currentUser.token}/> : <SignIn />}/>
             <Route  path='/signup' component={SignUp} />
             <Route  path='/signin' render={() => currentUser.token ? <Redirect to="/" /> : <SignIn />} />
+            <Route  path='/test' render={() => <Redirect to="/" />} />
           </Switch>
       </div>
     );
