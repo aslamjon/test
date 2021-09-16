@@ -67,19 +67,19 @@ const Home = ({ token, ProductsSelector, SetProducts }) => {
                 return res
             }).catch(err => notify())
     }
-    const DataToTable = () => {
-        ProductsSelector && ProductsSelector.map((val, index) => dataSource.push({
-            key: index+1,
-            name: val.name,
-            sellPrice: val.stocks[0].sellPrice.UZS + " UZS",
-            count: val.stocks[0].count
-        }))
-    }
-    dataSource = [];
+    
+    
     if (!dataSource) {
         getProduct();
-        DataToTable()
     }
+    dataSource = [];
+    ProductsSelector && ProductsSelector.map((val, index) => dataSource.push({
+        key: index + 1,
+        name: val.name,
+        sellPrice: val.stocks[0].sellPrice.UZS + " UZS",
+        count: val.stocks[0].count
+    }))
+
     // data for test
     let dataSource1 = [
         {
