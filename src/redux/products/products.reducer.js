@@ -15,7 +15,7 @@ const ProductsReduser = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 search: action.payload
-            }        
+            }              
         default:
             return state;
     }

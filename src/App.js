@@ -15,10 +15,10 @@ class App extends Component {
     return (
       <div>
           <Switch>
-            <Route exact path='/' render={() => currentUser.token ? <Home token={currentUser.token}/> : <SignIn />}/>
-            <Route  path='/signup' component={SignUp} />
-            <Route  path='/signin' render={() => currentUser.token ? <Redirect to="/" /> : <SignIn />} />
-            <Route  path='/test' render={() => <Redirect to="/" />} />
+            <Route exact path='/' render={() => currentUser.token ? <Redirect to="/test" /> : <SignIn />}/>
+            <Route exact path='/test' render={() => currentUser.token ? <Home token={currentUser.token}/> : <SignIn />}/>
+            <Route  path='/test/signup' component={SignUp} />
+            <Route  path='/test/signin' render={() => currentUser.token ? <Redirect to="/test" /> : <SignIn />} />
           </Switch>
       </div>
     );

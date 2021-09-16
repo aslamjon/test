@@ -1,13 +1,13 @@
 import React from 'react'
 import axios from 'axios';
 import { orderBy } from 'lodash'
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { ToastContainer, toast } from 'react-toastify';
 
 import Table from '../../components/Table';
 import { ProductsSelector, SearchProductSelector } from '../../redux/products/products.selector';
 import { setProducts } from '../../redux/products/products.action';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-
 
 const columns = [
     {
@@ -19,11 +19,9 @@ const columns = [
         key: 'name',
         title: 'Name',
         dataIndex: 'name',
-    },
-    {
-        title: 'Description',
-        dataIndex: 'des',
-        key: 'des',
+        sorter: true,
+        sortDirections: ['ascend'],
+        render: name => orderBy(name, ['name'], ['asc'])
     },
     {
         title: 'Sell Price',
@@ -36,9 +34,15 @@ const columns = [
         key: 'count',
     },
 ];
+
 let dataSource = false;
-const Home = ({ token, ProductsSelector, SetProducts, SearchProduct }) => {
-    
+const Home = ({ token, ProductsSelector, SetProducts }) => {
+    const notify = () => {
+        toast.error("Error: Server Error !", {
+            position: toast.POSITION.TOP_RIGHT
+        });
+    }
+    // get Product from API
     const getProduct = () => {
         const url = 'https://face.ox-sys.com/variations'
         const params = JSON.stringify({
@@ -59,46 +63,66 @@ const Home = ({ token, ProductsSelector, SetProducts, SearchProduct }) => {
         }
         axios.post(url, params, config)
             .then(res => {
-                console.log(res.data) 
                 SetProducts(res.data.items)
                 return res
-            })
+            }).catch(err => notify())
     }
     const DataToTable = () => {
         ProductsSelector && ProductsSelector.map((val, index) => dataSource.push({
             key: index+1,
-            name: val.supplier,
-            des: val.name,
+            name: val.name,
             sellPrice: val.stocks[0].sellPrice.UZS + " UZS",
             count: val.stocks[0].count
         }))
     }
+    dataSource = [];
     if (!dataSource) {
-        dataSource = [];
         getProduct();
         DataToTable()
     }
-    if (SearchProduct === '') {
-        dataSource = [];
-        DataToTable()
-    } else {
-        dataSource = [];
-        ProductsSelector.map((val, index) => {
-            
-            val.supplier.toLowerCase().includes(SearchProduct.toLowerCase()) && 
-            dataSource.push({
-                key: index+1,
-                name: val.supplier,
-                des: val.name,
-                sellPrice: val.stocks[0].sellPrice.UZS + " UZS",
-                count: val.stocks[0].count
-            })
-            return val
-        })
-        dataSource = orderBy(dataSource, ['name'], ['asc']);
-    }
+    // data for test
+    let dataSource1 = [
+        {
+            key: 1,
+            name: "Olma",
+            count: 1,
+            sellPrice: 100
+        },
+        {
+            key: 2,
+            name: "Nok",
+            count: 2,
+            sellPrice: 100
+        },
+        {
+            key: 3,
+            name: "Banan",
+            count: 4,
+            sellPrice: 100
+        },
+        {
+            key: 4,
+            name: "Ananas",
+            count: 4,
+            sellPrice: 100
+        },
+        {
+            key: 5,
+            name: "Olcha",
+            count: 5,
+            sellPrice: 100
+        },
+        {
+            key: 6,
+            name: "Anor",
+            count: 6,
+            sellPrice: 100
+        }
+    ]
+
     return (
         <>
+            <ToastContainer />
             <Table ProductsSelector={ProductsSelector} dataSource={dataSource} columns={columns}
                 pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30'] }} />
         </>
@@ -106,7 +130,7 @@ const Home = ({ token, ProductsSelector, SetProducts, SearchProduct }) => {
 }
 const mapStateToProps = createStructuredSelector({
     ProductsSelector,
-    SearchProduct: SearchProductSelector
+    SearchProduct: SearchProductSelector,
 })
 
 const mapDispathToProps = dispatch => ({

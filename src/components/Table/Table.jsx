@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Table, Spin, Space, Input } from 'antd';
 import styled from 'styled-components';
-import { searchProducts } from '../../redux/products/products.action';
-import { connect } from 'react-redux';
+
 import { LoadingOutlined } from '@ant-design/icons'
+import { orderBy, startsWith } from 'lodash';
 
 const SearchBoxStyled = styled.div`
     padding: 15px;
@@ -26,26 +26,70 @@ const SpinerBoxStyled = styled.div`
     }
 `;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
-const TableComponent = ({dataSource, columns, SearchProducts, ProductsSelector}) => {
+const TableComponent = ({ dataSource, columns, ProductsSelector }) => {
+    
     const { Search } = Input;
 
-    const onSearch = value => SearchProducts(value);
+    const [SearchProduct, SetSearchProduct] = useState('');
+    const [dataOrder, setDataOrder] = useState(false);
+
+    const onSearch = value => SetSearchProduct(value);
+
+
+    function onChange(pagination, filters, sorter, extra) {
+        console.log('params', pagination, filters, sorter, extra);
+        if (sorter.order) setDataOrder(orderBy(extra.currentDataSource, ['name'], ['asc']));
+        else setDataOrder(false)
+    }
+    // function for search input
+    const filterData = (main) => {
+        let newDataSource = [];
+        let temp = [];
+        main.map((val, index) => {
+            if (val.name.toLowerCase().includes(SearchProduct.toLowerCase())) {
+                if (startsWith(val.name.toLowerCase(), SearchProduct.toLowerCase()))
+                    newDataSource.push({
+                        key: index + 1,
+                        name: val.name,
+                        sellPrice: val.sellPrice,
+                        count: val.count
+                    })
+                else 
+                    temp.push({
+                        key: index + 1,
+                        name: val.name,
+                        sellPrice: val.sellPrice,
+                        count: val.count
+                    })
+            }
+            return val
+        })
+        newDataSource.push(...temp)
+        return newDataSource;
+    }
+
+    if (SearchProduct !== '' && !dataOrder)
+        dataSource = filterData(dataSource)
+    else if (SearchProduct !== '' && dataOrder)
+        dataSource = filterData(dataOrder)
+    
     return (
         <>
-            {!ProductsSelector ? 
+            {!ProductsSelector ?
                 <SpinerBoxStyled>
                     <Spin indicator={antIcon} />
                     Loading...
-                </SpinerBoxStyled> 
-                : 
+                </SpinerBoxStyled>
+                :
                 <>
                     <SearchBoxStyled>
                         <Space direction="vertical">
                             <Search placeholder="input search text" onSearch={onSearch} enterButton />
                         </Space>
                     </SearchBoxStyled>
+                    
                     <TableStyled>
-                        <Table dataSource={dataSource} columns={columns} />
+                        <Table dataSource={dataOrder ? dataOrder : dataSource} columns={columns} onChange={onChange} />
                     </TableStyled>
                 </>
             }
@@ -53,8 +97,6 @@ const TableComponent = ({dataSource, columns, SearchProducts, ProductsSelector})
     )
 }
 
-const mapDispathToProps = dispatch => ({
-    SearchProducts: value => dispatch(searchProducts(value)),
-})
 
-export default connect(null, mapDispathToProps)(TableComponent);
+
+export default TableComponent;
