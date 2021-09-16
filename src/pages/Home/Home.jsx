@@ -73,9 +73,8 @@ const Home = ({ token, ProductsSelector, SetProducts }) => {
         getProduct();
     }
     dataSource = [];
-    let counter = 0;
     ProductsSelector && ProductsSelector.map((val, index) => dataSource.push({
-        key: ++counter,
+        key: index + 1,
         name: val.name,
         sellPrice: val.stocks[0].sellPrice.UZS + " UZS",
         count: val.stocks[0].count
