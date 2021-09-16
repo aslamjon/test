@@ -45,18 +45,19 @@ const TableComponent = ({ dataSource, columns, ProductsSelector }) => {
     const filterData = (main) => {
         let newDataSource = [];
         let temp = [];
+        let counter = 0;
         main.map((val, index) => {
             if (val.name.toLowerCase().includes(SearchProduct.toLowerCase())) {
                 if (startsWith(val.name.toLowerCase(), SearchProduct.toLowerCase()))
                     newDataSource.push({
-                        key: index + 1,
+                        key: ++counter,
                         name: val.name,
                         sellPrice: val.sellPrice,
                         count: val.count
                     })
                 else 
                     temp.push({
-                        key: index + 1,
+                        key: ++counter,
                         name: val.name,
                         sellPrice: val.sellPrice,
                         count: val.count
