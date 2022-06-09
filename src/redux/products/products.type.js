@@ -1,5 +1,0 @@
-export const ProductsTypes = {
-    SET_PRODUCTS: "SET_PRODUCTS",
-    SEARCH_PRODUCT: "SEARCH_PRODUCT",
-    SET_DATA_FOR_TABLE: "SET_DATA_FOR_TABLE"
-}
